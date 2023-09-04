@@ -41,6 +41,10 @@ jobs:
       - name: Lowercase the repo name
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
+      - name: Run Unit Tests
+        run: docker build -t carlosv14/react-app-test:latest -f Dockerfile.dev .
+        run: docker run -e CI=true carlosv14/react-app-test:latest npm run test 
+
       - name: Build and push container image to registry
         uses: docker/build-push-action@v4
         with:
