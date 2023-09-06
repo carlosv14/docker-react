@@ -51,28 +51,32 @@ jobs:
         with:
           push: true
           tags: ghcr.io/${{ env.REPO }}-client:${{ github.sha }}
-          file: ../../client/Dockerfile
+          file: ./Dockerfile
+          context: ../../client
 
       - name: Build and push nginx container image to registry
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: ghcr.io/${{ env.REPO }}-nxginx:${{ github.sha }}
-          file: ../../nginx/Dockerfile
+          file: ./Dockerfile
+          context: ../../nxginx
       
       - name: Build and push server container image to registry
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: ghcr.io/${{ env.REPO }}-server:${{ github.sha }}
-          file: ../../server/Dockerfile
+          file: ./Dockerfile
+          context: ../../server
 
       - name: Build and push worker container image to registry
         uses: docker/build-push-action@v4
         with:
           push: true
           tags: ghcr.io/${{ env.REPO }}-worker:${{ github.sha }}
-          file: ../../worker/Dockerfile
+          file: ./Dockerfile
+          context: ../../worker
 
   deploy:
     runs-on: ubuntu-latest
