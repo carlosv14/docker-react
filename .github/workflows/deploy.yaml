@@ -43,15 +43,36 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          docker build -t carlosv14/react-app-test:latest -f Dockerfile.dev .
-          docker run -e CI=true carlosv14/react-app-test:latest npm run test 
+          docker build -t carlosv14/react-app-test:latest -f ./client/Dockerfile.dev ./client
+          docker run -e CI=true carlosv14/react-app-test:latest npm run test -- --coverage
 
-      - name: Build and push container image to registry
+      - name: Build and push client container image to registry
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
-          file: ../../Dockerfile
+          tags: ghcr.io/${{ env.REPO }}-client:${{ github.sha }}
+          file: ../../client/Dockerfile
+
+      - name: Build and push nginx container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}-nxginx:${{ github.sha }}
+          file: ../../nginx/Dockerfile
+      
+      - name: Build and push server container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}-server:${{ github.sha }}
+          file: ../../server/Dockerfile
+
+      - name: Build and push worker container image to registry
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}-worker:${{ github.sha }}
+          file: ../../worker/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
