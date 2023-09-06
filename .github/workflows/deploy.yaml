@@ -47,36 +47,25 @@ jobs:
           docker run -e CI=true carlosv14/react-app-test:latest npm run test -- --coverage
 
       - name: Build and push client container image to registry
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ghcr.io/${{ env.REPO }}-client:${{ github.sha }}
-          file: ./Dockerfile
-          context: ./client
+        run: |
+          docker build -t ghcr.io/${{ env.REPO }}-client:${{ github.sha }} ./client
+          docker push ghcr.io/${{ env.REPO }}-client:${{ github.sha }}
+        
 
       - name: Build and push nginx container image to registry
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ghcr.io/${{ env.REPO }}-nxginx:${{ github.sha }}
-          file: ./Dockerfile
-          context: ./nxginx
+        run: |
+          docker build -t ghcr.io/${{ env.REPO }}-nginx:${{ github.sha }} ./nginx
+          docker push ghcr.io/${{ env.REPO }}-nginx:${{ github.sha }}
       
       - name: Build and push server container image to registry
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ghcr.io/${{ env.REPO }}-server:${{ github.sha }}
-          file: ./Dockerfile
-          context: ./server
+        run: |
+          docker build -t ghcr.io/${{ env.REPO }}-server:${{ github.sha }} ./server
+          docker push ghcr.io/${{ env.REPO }}-server:${{ github.sha }}
 
       - name: Build and push worker container image to registry
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ghcr.io/${{ env.REPO }}-worker:${{ github.sha }}
-          file: ./Dockerfile
-          context: ./worker
+        run: |
+          docker build -t ghcr.io/${{ env.REPO }}-worker:${{ github.sha }} ./worker
+          docker push ghcr.io/${{ env.REPO }}-worker:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
